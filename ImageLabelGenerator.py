@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
 from io import BytesIO
+from pathlib import Path
 
 
 def detect_labels(photo: str, bucket: str):
@@ -13,6 +14,11 @@ def detect_labels(photo: str, bucket: str):
     Call Rekognition on an S3 image, print labels + confidences,
     draw bounding boxes, save an output image, and return the label names.
     """
+    ext = Path(photo).suffix.lower()
+    if ext == ".webp":
+        print(f"[SKIP] {photo} is a WEBP image. Rekognition only supports JPEG/PNG etc.")
+        return []
+
     client = boto3.client('rekognition')
 
     response = client.detect_labels(
