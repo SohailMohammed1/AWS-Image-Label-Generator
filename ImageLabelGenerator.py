@@ -73,7 +73,8 @@ def detect_labels(photo: str, bucket: str):
     plt.axis('off')
 
     # Save instead of show
-    output_filename = "rekognition_output.png"
+    save_photo_name = photo.replace("/", "_")
+    output_filename = f"rekognition_output_{save_photo_name}.png"
     plt.savefig(output_filename, bbox_inches='tight')
     plt.close()
 
@@ -83,13 +84,14 @@ def detect_labels(photo: str, bucket: str):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyze a single S3 image with Amazon Rekognition"
+        description="Analyze a one or more S3 image with Amazon Rekognition"
     )
 
     # S3 object key 
     parser.add_argument(
         "photo",
-        help="S3 object key (file name) to analyze, e.g. istockphoto-1029925066-612x612.jpg",
+        nargs="+", 
+        help="One or more s3 object names to analyze, e.g. istockphoto-123.123.jpg, istockphoto-234-234.jpg" ,
     )
 
     # Bucket
@@ -102,10 +104,16 @@ def main():
 
     args = parser.parse_args()
 
-    photo = args.photo
     bucket = args.bucket
+    overall_results = {} 
 
-    labels = detect_labels(photo, bucket)
+    for photo in args.photo:
+        print("\n" + "=" * 80)
+        print(f"Processing image: s3://{bucket}/{photo}")
+
+        labels = detect_labels(photo, bucket)
+        overall_results[photo] = labels
+
 
     # Summary
     print("\nSummary")
@@ -117,6 +125,12 @@ def main():
         print("Labels:")
         for name in labels:
             print(f"  - {name}")
+
+    print("\n" + "=" * 80)
+    print("Overall summary")
+    print("----------------")
+    for photo, labels in overall_results.items():
+        print(f"- {photo}: {len(labels)} labels")
 
 
 if __name__ == "__main__":
