@@ -22,7 +22,7 @@ Below are the services and components used:
 - Python: `boto3, Pillow, Matplotlib` executes the processing pipeline
 - CLI: Terminal point for users to submit images for analysis 
 
-![AWS Architecture](/workspaces/AWS-Image-Label-Generator/Screenshots/Screenshot_2025-12-29_152748.png)
+![AWS Architecture](Screenshots/Screenshot_2025-12-29_152748.png)
 
 ## Workflow Diagram
 
