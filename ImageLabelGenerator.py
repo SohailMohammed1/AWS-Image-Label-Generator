@@ -7,6 +7,7 @@ import matplotlib.patches as patches
 from PIL import Image
 from io import BytesIO
 from pathlib import Path
+import csv 
 
 
 def detect_labels(photo: str, bucket: str):
@@ -17,7 +18,7 @@ def detect_labels(photo: str, bucket: str):
     ext = Path(photo).suffix.lower()
     if ext == ".webp":
         print(f"[SKIP] {photo} is a WEBP image. Rekognition only supports JPEG/PNG etc.")
-        return []
+        return [], []
 
     client = boto3.client('rekognition')
 
@@ -141,3 +142,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
